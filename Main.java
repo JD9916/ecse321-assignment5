@@ -7,7 +7,14 @@
  * with a budget of 100$. The way the code has been designed,
  * it could easily be modified to calculate the optimal 
  * implementation for any budget of n$.
- * 
+ *
+ *
+ * Note: In order to work with arrays for the dynamic programming
+ *       solution, all monetary values in the system are 
+ *       multiplied by 10 so they can be treated as integers. This way, 
+ *       the dollar costs can be used as indexes into the arrays. In
+ *       The final step, the answers are divided by 10 to properly 
+ *       display the answer to the true numbers of the problem.
  */
 
 package ecse321_assign5;
@@ -19,11 +26,16 @@ public class Main {
   
   public static void main(String[] args){
     
-    double Asub150; //c
-    double Asub200; //g
-    double Asub50;  //m
-    double Asub25;  //t
-    double Asub100; //d
+    //The variables below represent the solutions to the subproblems
+    //which are to be calculated for each step of the dynamic programming
+    //algorithm. (ex: Asub150 = answer to the problem with a budget that
+    //is 150$ smaller)
+
+    double Asub150; //camera
+    double Asub200; //gateway
+    double Asub50;  //motion sensor
+    double Asub25;  //thermal sensor
+    double Asub100; //data cloud storage
     
     double tempMax; // A temporary variable to hold a max
     
@@ -53,14 +65,10 @@ public class Main {
     tChosen[450] = 0;
     dChosen[450] = 1;
     
-    for(int i = 0; i < 1001; i++){
-      maxAvailability[i] = 0;
-    }
-    //System.out.println(calculateAvailability(1,0, 0,0, 0));
-    //Initialize base case of recurrence
     maxAvailability[475] = calculateAvailability(1,0,1,1,1);
+
     System.out.println("Minimum cost: $47.5, Availability: " + calculateAvailability(1,1,0,1,1) + "\n");
-    //System.out.println("good: " + calculateAvailability(1,1,1,0,1));
+    
     for(int i = 500; i <= 1000; i = i + 25){
       
      //Find the new availabilities of adding 1 more component
@@ -132,6 +140,7 @@ public class Main {
      }    
     }
     
+    //Print statements to display solutions
     System.out.println("Optimal Choices leading up to 100$:");
     for(double i = 1; i <= 1000; i++){
       if(maxAvailability[(int)i] != 0){
@@ -152,8 +161,11 @@ public class Main {
     
     double availability = 0;
     
+    //Formula from question 1) a)
     availability = (1-Math.pow((0.03),c))*(1-Math.pow(0.01,g))*(1-((Math.pow(0.1, m) * Math.pow(0.15, t))))*(1-Math.pow(0.05,d))   ;
     
+    //The below condition makes sure every implementation meets the minimum requirements
+    //for the number of each components used.
     if(c == 0 ||g == 0 || (m == 0 && t == 0) || d == 0){
       availability = 0;
     }
